@@ -89,6 +89,23 @@ user_profiles = {
     }
 }
 
+# Ensure user_profiles includes all users from activities
+for activity in activities.values():
+    for email in activity["participants"]:
+        if email not in user_profiles:
+            user_profiles[email] = {
+                "name": email.split("@")[0].capitalize(),
+                "preferences": {"notifications": True},
+                "activities": []
+            }
+
+# Update activities for all users
+for email in user_profiles:
+    user_profiles[email]["activities"] = [
+        activity_name for activity_name, activity in activities.items()
+        if email in activity["participants"]
+    ]
+
 @app.get("/")
 def root():
     return RedirectResponse(url="/static/index.html")
@@ -144,7 +161,7 @@ def unregister_from_activity(activity_name: str, email: str):
 
 @app.get("/profiles/{email}")
 def get_user_profile(email: str):
-    """Retrieve a user's profile"""
+    """Retrieve a user's profile, including their activities"""
     if email not in user_profiles:
         raise HTTPException(status_code=404, detail="User profile not found")
     return user_profiles[email]
@@ -159,5 +176,11 @@ def update_user_profile(email: str, name: str = None, notifications: bool = None
         user_profiles[email]["name"] = name
     if notifications is not None:
         user_profiles[email]["preferences"]["notifications"] = notifications
+
+    # Update activities in the profile
+    user_profiles[email]["activities"] = [
+        activity_name for activity_name, activity in activities.items()
+        if email in activity["participants"]
+    ]
 
     return {"message": f"Profile updated for {email}"}
