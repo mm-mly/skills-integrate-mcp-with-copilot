@@ -77,6 +77,17 @@ activities = {
     }
 }
 
+# In-memory user profiles database
+user_profiles = {
+    "michael@mergington.edu": {
+        "name": "Michael",
+        "preferences": {"notifications": True}
+    },
+    "emma@mergington.edu": {
+        "name": "Emma",
+        "preferences": {"notifications": False}
+    }
+}
 
 @app.get("/")
 def root():
@@ -130,3 +141,23 @@ def unregister_from_activity(activity_name: str, email: str):
     # Remove student
     activity["participants"].remove(email)
     return {"message": f"Unregistered {email} from {activity_name}"}
+
+@app.get("/profiles/{email}")
+def get_user_profile(email: str):
+    """Retrieve a user's profile"""
+    if email not in user_profiles:
+        raise HTTPException(status_code=404, detail="User profile not found")
+    return user_profiles[email]
+
+@app.put("/profiles/{email}")
+def update_user_profile(email: str, name: str = None, notifications: bool = None):
+    """Update a user's profile"""
+    if email not in user_profiles:
+        raise HTTPException(status_code=404, detail="User profile not found")
+
+    if name is not None:
+        user_profiles[email]["name"] = name
+    if notifications is not None:
+        user_profiles[email]["preferences"]["notifications"] = notifications
+
+    return {"message": f"Profile updated for {email}"}
