@@ -128,7 +128,6 @@ header nav a:hover {
   border-radius: 4px;
   cursor: not-allowed;
 }
-}
 
 header h1 {
   margin-bottom: 10px;
@@ -139,6 +138,20 @@ main {
   flex-wrap: wrap;
   gap: 30px;
   justify-content: center;
+  align-items: flex-start;
+}
+
+#activities-container {
+  flex: 2 1 0;
+  min-width: 320px;
+}
+
+.sidebar-container {
+  flex: 1 1 0;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 @media (min-width: 768px) {
