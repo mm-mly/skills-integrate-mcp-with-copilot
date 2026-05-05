@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>User Profile</h1>
+      <nav>
+        <a href="index.html">Home</a>
+      </nav>
+    </header>
+    <main>
+      <section id="profile-container">
+        <h2>Profile Information</h2>
+        <form id="email-gate-form" class="profile-info">
+          <label><strong>Enter your email to view your profile:</strong>
+            <input type="email" id="profile-email-input" required placeholder="your-email@mergington.edu" />
+          </label>
+          <div style="margin-top:15px;">
+            <button type="submit" id="view-profile-btn" disabled>View Profile</button>
+          </div>
+        </form>
+        <div id="profile-details" style="display:none;">
+          <div class="profile-avatar" style="text-align:center; margin-bottom:20px;">
+            <img src="https://avatars.githubusercontent.com/u/583231?v=4" alt="Profile Avatar" style="width:90px;height:90px;border-radius:50%;border:3px solid #3949ab;" />
+          </div>
+          <div id="profile-view-fields">
+            <label><strong>Name:</strong>
+              <span id="profile-view-name">Jane Doe</span>
+            </label><br>
+            <label><strong>Email:</strong>
+              <span id="profile-view-email">jane.doe@mergington.edu</span>
+            </label><br>
+            <label><strong>Notification Preferences:</strong>
+              <span id="profile-view-notifications">Enabled</span>
+            </label><br>
+            <div style="margin-top:15px;">
+              <button type="button" id="edit-profile-btn">Edit</button>
+            </div>
+          </div>
+          <form class="profile-info" id="profile-edit-form" style="display:none;">
+            <label><strong>Name:</strong>
+              <input type="text" id="edit-profile-name" value="Jane Doe" />
+            </label>
+            <label><strong>Email:</strong>
+              <input type="email" id="edit-profile-email" value="jane.doe@mergington.edu" disabled />
+            </label>
+            <label><strong>Notification Preferences:</strong>
+              <select id="edit-profile-notifications">
+                <option value="true">Enabled</option>
+                <option value="false">Disabled</option>
+              </select>
+            </label>
+            <div style="margin-top:15px;">
+              <button type="submit" id="save-profile-btn">Save</button>
+              <button type="button" id="cancel-profile-btn">Cancel</button>
+            </div>
+          </form>
+          <hr style="margin:30px 0;" />
+          <section class="activity-history">
+            <h3>Activity History</h3>
+            <ul>
+              <li>Chess Club - Registered (Jan 2026)</li>
+              <li>Programming Class - Registered (Feb 2026)</li>
+              <li>Gym Class - Unregistered (Mar 2026)</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 Mergington High School</p>
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,8 +1,134 @@
+// Profile page: email gate logic
+
+function setupProfileEmailGate() {
+  const emailGateForm = document.getElementById("email-gate-form");
+  const profileDetails = document.getElementById("profile-details");
+  if (emailGateForm && profileDetails) {
+    const emailInput = document.getElementById("profile-email-input");
+    const viewBtn = document.getElementById("view-profile-btn");
+    // Profile fields
+    const profileName = document.getElementById('edit-profile-name');
+    const profileEmail = document.getElementById('edit-profile-email');
+    const profileNotifications = document.getElementById('edit-profile-notifications');
+    const profileEditForm = document.getElementById('profile-edit-form');
+    const saveBtn = document.getElementById('save-profile-btn');
+    const cancelBtn = document.getElementById('cancel-profile-btn');
+    const activityHistory = profileDetails.querySelector('.activity-history ul');
+    const profileViewFields = document.getElementById('profile-view-fields');
+    const profileViewName = document.getElementById('profile-view-name');
+    const profileViewEmail = document.getElementById('profile-view-email');
+    const profileViewNotifications = document.getElementById('profile-view-notifications');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    let lastProfileData = null;
+    if (emailInput && viewBtn) {
+      function updateButtonState() {
+        const value = emailInput.value.trim();
+        viewBtn.disabled = !(value && emailInput.checkValidity());
+      }
+      emailInput.addEventListener("input", updateButtonState);
+      setTimeout(updateButtonState, 0);
+    }
+    emailGateForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      // Fetch user profile from backend
+      try {
+        const res = await fetch(`/profiles/${encodeURIComponent(email)}`);
+        if (!res.ok) throw new Error("Profile not found");
+        const data = await res.json();
+        lastProfileData = data;
+        // Fill profile fields (edit form)
+        if (profileName) profileName.value = data.name || "";
+        if (profileEmail) profileEmail.value = email;
+        if (profileNotifications) profileNotifications.value = String(data.preferences && data.preferences.notifications);
+        // Fill profile fields (view mode)
+        if (profileViewName) profileViewName.textContent = data.name || "";
+        if (profileViewEmail) profileViewEmail.textContent = email;
+        if (profileViewNotifications) profileViewNotifications.textContent = (data.preferences && data.preferences.notifications) ? "Enabled" : "Disabled";
+        if (profileViewFields) profileViewFields.style.display = "block";
+        if (profileEditForm) profileEditForm.style.display = "none";
+            // Edit button shows the edit form
+            if (editProfileBtn) {
+              editProfileBtn.addEventListener("click", function () {
+                if (profileEditForm) profileEditForm.style.display = "block";
+                if (profileViewFields) profileViewFields.style.display = "none";
+              });
+            }
+        // Fill activity history
+        if (activityHistory) {
+          activityHistory.innerHTML = "";
+          if (data.activities && data.activities.length > 0) {
+            data.activities.forEach(act => {
+              const li = document.createElement("li");
+              li.textContent = act + " - Registered";
+              activityHistory.appendChild(li);
+            });
+          } else {
+            const li = document.createElement("li");
+            li.textContent = "No activities found.";
+            activityHistory.appendChild(li);
+          }
+        }
+        emailGateForm.style.display = "none";
+        profileDetails.style.display = "block";
+      } catch (err) {
+        alert("Profile not found for this email.");
+      }
+    });
+
+    // Save profile changes
+    if (profileEditForm) {
+      profileEditForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        if (!profileEmail) return;
+        const email = profileEmail.value;
+        const name = profileName.value;
+        const notifications = profileNotifications.value === "true";
+        try {
+          const res = await fetch(`/profiles/${encodeURIComponent(email)}?name=${encodeURIComponent(name)}&notifications=${notifications}`, {
+            method: "PUT"
+          });
+          if (!res.ok) throw new Error("Failed to update profile");
+          // Update view fields
+          if (profileViewName) profileViewName.textContent = name;
+          if (profileViewNotifications) profileViewNotifications.textContent = notifications ? "Enabled" : "Disabled";
+          if (profileEditForm) profileEditForm.style.display = "none";
+          if (profileViewFields) profileViewFields.style.display = "block";
+          alert("Profile updated successfully!");
+        } catch (err) {
+          alert("Failed to update profile.");
+        }
+      });
+    }
+
+    // Cancel button resets fields to last loaded profile and switches to view mode
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", function () {
+        if (lastProfileData) {
+          if (profileName) profileName.value = lastProfileData.name || "";
+          if (profileNotifications) profileNotifications.value = String(lastProfileData.preferences && lastProfileData.preferences.notifications);
+        }
+        if (profileEditForm) profileEditForm.style.display = "none";
+        if (profileViewFields) profileViewFields.style.display = "block";
+      });
+    }
+  }
+}
+
+if (document.getElementById("profile-container")) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupProfileEmailGate);
+  } else {
+    setupProfileEmailGate();
+  }
+}
 document.addEventListener("DOMContentLoaded", () => {
   const activitiesList = document.getElementById("activities-list");
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
+
+  if (!activitiesList || !signupForm) return;
 
   // Function to fetch activities from API
   async function fetchActivities() {

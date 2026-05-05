@@ -10,7 +10,11 @@
     <header>
       <h1>Mergington High School</h1>
       <h2>Extracurricular Activities</h2>
+      <nav>
+        <!-- Profile UI is now in the main section -->
+      </nav>
     </header>
+
 
     <main>
       <section id="activities-container">
@@ -21,24 +25,80 @@
         </div>
       </section>
 
-      <section id="signup-container">
-        <h3>Sign Up for an Activity</h3>
-        <form id="signup-form">
-          <div class="form-group">
-            <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+      <div class="sidebar-container">
+        <section id="signup-container">
+          <h3>Sign Up for an Activity</h3>
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="email">Student Email:</label>
+              <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+            </div>
+            <div class="form-group">
+              <label for="activity">Select Activity:</label>
+              <select id="activity" required>
+                <option value="">-- Select an activity --</option>
+                <!-- Activity options will be loaded here -->
+              </select>
+            </div>
+            <button type="submit">Sign Up</button>
+          </form>
+          <div id="message" class="hidden"></div>
+        </section>
+
+        <section id="profile-container">
+          <h3>User Profile</h3>
+          <form id="email-gate-form" class="profile-info">
+            <label><strong>Enter your email to view your profile:</strong>
+              <input type="email" id="profile-email-input" required placeholder="your-email@mergington.edu" />
+            </label>
+            <div style="margin-top:15px;">
+              <button type="submit" id="view-profile-btn" disabled>View Profile</button>
+            </div>
+          </form>
+          <div id="profile-details" style="display:none;">
+            <div class="profile-avatar" style="text-align:center; margin-bottom:20px;">
+              <img src="https://avatars.githubusercontent.com/u/583231?v=4" alt="Profile Avatar" style="width:90px;height:90px;border-radius:50%;border:3px solid #3949ab;" />
+            </div>
+            <div id="profile-view-fields">
+              <label><strong>Name:</strong>
+                <span id="profile-view-name">Jane Doe</span>
+              </label><br>
+              <label><strong>Email:</strong>
+                <span id="profile-view-email">jane.doe@mergington.edu</span>
+              </label><br>
+              <label><strong>Notification Preferences:</strong>
+                <span id="profile-view-notifications">Enabled</span>
+              </label><br>
+              <div style="margin-top:15px;">
+                <button type="button" id="edit-profile-btn">Edit</button>
+              </div>
+            </div>
+            <form class="profile-info" id="profile-edit-form" style="display:none;">
+              <label><strong>Name:</strong>
+                <input type="text" id="edit-profile-name" value="Jane Doe" />
+              </label>
+              <label><strong>Email:</strong>
+                <input type="email" id="edit-profile-email" value="jane.doe@mergington.edu" disabled />
+              </label>
+              <label><strong>Notification Preferences:</strong>
+                <select id="edit-profile-notifications">
+                  <option value="true">Enabled</option>
+                  <option value="false">Disabled</option>
+                </select>
+              </label>
+              <div style="margin-top:15px;">
+                <button type="submit" id="save-profile-btn">Save</button>
+                <button type="button" id="cancel-profile-btn">Cancel</button>
+              </div>
+            </form>
+            <hr style="margin:30px 0;" />
+            <section class="activity-history">
+              <h3>Activity History</h3>
+              <ul></ul>
+            </section>
           </div>
-          <div class="form-group">
-            <label for="activity">Select Activity:</label>
-            <select id="activity" required>
-              <option value="">-- Select an activity --</option>
-              <!-- Activity options will be loaded here -->
-            </select>
-          </div>
-          <button type="submit">Sign Up</button>
-        </form>
-        <div id="message" class="hidden"></div>
-      </section>
+        </section>
+      </div>
     </main>
 
     <footer>
