@@ -115,14 +115,6 @@ header nav a:hover {
   background: #283593;
 }
 
-.profile-info {
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #f0f4ff;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(26,35,126,0.05);
-}
-
 .profile-info p {
   margin-bottom: 10px;
   font-size: 1.1em;
